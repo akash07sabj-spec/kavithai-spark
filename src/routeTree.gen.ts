@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as KIdRouteImport } from './routes/k.$id'
 import { Route as AuthenticatedComposeRouteImport } from './routes/_authenticated/compose'
 
 const AuthRoute = AuthRouteImport.update({
@@ -28,6 +29,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KIdRoute = KIdRouteImport.update({
+  id: '/k/$id',
+  path: '/k/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedComposeRoute = AuthenticatedComposeRouteImport.update({
   id: '/compose',
   path: '/compose',
@@ -38,11 +44,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/compose': typeof AuthenticatedComposeRoute
+  '/k/$id': typeof KIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/compose': typeof AuthenticatedComposeRoute
+  '/k/$id': typeof KIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -50,19 +58,27 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/compose': typeof AuthenticatedComposeRoute
+  '/k/$id': typeof KIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/compose'
+  fullPaths: '/' | '/auth' | '/compose' | '/k/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/compose'
-  id: '__root__' | '/' | '/_authenticated' | '/auth' | '/_authenticated/compose'
+  to: '/' | '/auth' | '/compose' | '/k/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/compose'
+    | '/k/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  KIdRoute: typeof KIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -86,6 +102,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/k/$id': {
+      id: '/k/$id'
+      path: '/k/$id'
+      fullPath: '/k/$id'
+      preLoaderRoute: typeof KIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/compose': {
@@ -113,6 +136,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  KIdRoute: KIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

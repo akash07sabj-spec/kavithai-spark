@@ -168,7 +168,7 @@ function KavithaiDetail() {
               Comments · {data.comments.length}
             </h2>
             <div className="flex flex-col gap-4">
-              {data.comments.map((c) => (
+              {data.comments.map((c: any) => (
                 <div key={c.id} className="flex gap-3">
                   <div className="grid size-8 shrink-0 place-items-center rounded-full bg-neutral-200 text-xs font-medium text-neutral-500">
                     {(c.author?.display_name ?? "?").slice(0, 1).toUpperCase()}
