@@ -16,6 +16,9 @@ function Home() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["feed", userId],
     queryFn: () => fetchFeed(userId),
+    staleTime: 60_000,
+    gcTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
   });
 
   return (
