@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, PenLine, User } from "lucide-react";
+import { Home, PenLine, Search, User } from "lucide-react";
 
 export function BottomNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -10,6 +10,12 @@ export function BottomNav() {
       <div className="mx-auto flex max-w-md items-center justify-around">
         <NavItem to="/" label="Home" active={isActive("/")}>
           <Home className="h-5 w-5" strokeWidth={isActive("/") ? 2.2 : 1.6} />
+        </NavItem>
+        <NavItem to="/search" label="Search" active={isActive("/search")}>
+          <Search
+            className="h-5 w-5"
+            strokeWidth={isActive("/search") ? 2.2 : 1.6}
+          />
         </NavItem>
         <NavItem to="/compose" label="Write" active={isActive("/compose")}>
           <PenLine
@@ -31,7 +37,7 @@ function NavItem({
   active,
   children,
 }: {
-  to: "/" | "/compose" | "/me";
+  to: "/" | "/search" | "/compose" | "/me";
   label: string;
   active: boolean;
   children: React.ReactNode;

@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -17,6 +18,11 @@ import { Route as UUsernameRouteImport } from './routes/u.$username'
 import { Route as KIdRouteImport } from './routes/k.$id'
 import { Route as AuthenticatedComposeRouteImport } from './routes/_authenticated/compose'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MeRoute = MeRouteImport.update({
   id: '/me',
   path: '/me',
@@ -56,6 +62,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/me': typeof MeRoute
+  '/search': typeof SearchRoute
   '/compose': typeof AuthenticatedComposeRoute
   '/k/$id': typeof KIdRoute
   '/u/$username': typeof UUsernameRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/me': typeof MeRoute
+  '/search': typeof SearchRoute
   '/compose': typeof AuthenticatedComposeRoute
   '/k/$id': typeof KIdRoute
   '/u/$username': typeof UUsernameRoute
@@ -74,21 +82,30 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/me': typeof MeRoute
+  '/search': typeof SearchRoute
   '/_authenticated/compose': typeof AuthenticatedComposeRoute
   '/k/$id': typeof KIdRoute
   '/u/$username': typeof UUsernameRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/me' | '/compose' | '/k/$id' | '/u/$username'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/me'
+    | '/search'
+    | '/compose'
+    | '/k/$id'
+    | '/u/$username'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/me' | '/compose' | '/k/$id' | '/u/$username'
+  to: '/' | '/auth' | '/me' | '/search' | '/compose' | '/k/$id' | '/u/$username'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/me'
+    | '/search'
     | '/_authenticated/compose'
     | '/k/$id'
     | '/u/$username'
@@ -99,12 +116,20 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   MeRoute: typeof MeRoute
+  SearchRoute: typeof SearchRoute
   KIdRoute: typeof KIdRoute
   UUsernameRoute: typeof UUsernameRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/me': {
       id: '/me'
       path: '/me'
@@ -173,19 +198,10 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   MeRoute: MeRoute,
+  SearchRoute: SearchRoute,
   KIdRoute: KIdRoute,
   UUsernameRoute: UUsernameRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
