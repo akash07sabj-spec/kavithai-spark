@@ -23,22 +23,33 @@ export async function fetchFeed(currentUserId: string | null): Promise<FeedKavit
     .select(
       `id, title, content, created_at, author_id,
        author:profiles!kavithais_author_id_fkey(id, username, display_name, avatar_url),
-       likes(user_id),
-       comments(id)`,
+       likes_count:likes(count),
+       comments_count:comments(count)`,
     )
     .order("created_at", { ascending: false })
     .limit(50);
   if (error) throw error;
-  return (data ?? []).map((k: any) => ({
+  const rows = data ?? [];
+  let myLikes = new Set<string>();
+  if (currentUserId && rows.length > 0) {
+    const ids = rows.map((k: any) => k.id);
+    const { data: mine } = await supabase
+      .from("likes")
+      .select("kavithai_id")
+      .eq("user_id", currentUserId)
+      .in("kavithai_id", ids);
+    myLikes = new Set((mine ?? []).map((l: any) => l.kavithai_id));
+  }
+  return rows.map((k: any) => ({
     id: k.id,
     title: k.title,
     content: k.content,
     created_at: k.created_at,
     author_id: k.author_id,
     author: Array.isArray(k.author) ? k.author[0] : k.author,
-    likes_count: k.likes?.length ?? 0,
-    comments_count: k.comments?.length ?? 0,
-    liked_by_me: !!currentUserId && (k.likes ?? []).some((l: any) => l.user_id === currentUserId),
+    likes_count: k.likes_count?.[0]?.count ?? 0,
+    comments_count: k.comments_count?.[0]?.count ?? 0,
+    liked_by_me: myLikes.has(k.id),
   }));
 }
 
