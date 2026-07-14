@@ -17,6 +17,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as UUsernameRouteImport } from './routes/u.$username'
 import { Route as KIdRouteImport } from './routes/k.$id'
 import { Route as AuthenticatedComposeRouteImport } from './routes/_authenticated/compose'
+import { Route as ApiPublicRateKavithaiRouteImport } from './routes/api/public/rate-kavithai'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -57,6 +58,11 @@ const AuthenticatedComposeRoute = AuthenticatedComposeRouteImport.update({
   path: '/compose',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiPublicRateKavithaiRoute = ApiPublicRateKavithaiRouteImport.update({
+  id: '/api/public/rate-kavithai',
+  path: '/api/public/rate-kavithai',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/compose': typeof AuthenticatedComposeRoute
   '/k/$id': typeof KIdRoute
   '/u/$username': typeof UUsernameRoute
+  '/api/public/rate-kavithai': typeof ApiPublicRateKavithaiRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/compose': typeof AuthenticatedComposeRoute
   '/k/$id': typeof KIdRoute
   '/u/$username': typeof UUsernameRoute
+  '/api/public/rate-kavithai': typeof ApiPublicRateKavithaiRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/_authenticated/compose': typeof AuthenticatedComposeRoute
   '/k/$id': typeof KIdRoute
   '/u/$username': typeof UUsernameRoute
+  '/api/public/rate-kavithai': typeof ApiPublicRateKavithaiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -97,8 +106,17 @@ export interface FileRouteTypes {
     | '/compose'
     | '/k/$id'
     | '/u/$username'
+    | '/api/public/rate-kavithai'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/me' | '/search' | '/compose' | '/k/$id' | '/u/$username'
+  to:
+    | '/'
+    | '/auth'
+    | '/me'
+    | '/search'
+    | '/compose'
+    | '/k/$id'
+    | '/u/$username'
+    | '/api/public/rate-kavithai'
   id:
     | '__root__'
     | '/'
@@ -109,6 +127,7 @@ export interface FileRouteTypes {
     | '/_authenticated/compose'
     | '/k/$id'
     | '/u/$username'
+    | '/api/public/rate-kavithai'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +138,7 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   KIdRoute: typeof KIdRoute
   UUsernameRoute: typeof UUsernameRoute
+  ApiPublicRateKavithaiRoute: typeof ApiPublicRateKavithaiRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -179,6 +199,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedComposeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/rate-kavithai': {
+      id: '/api/public/rate-kavithai'
+      path: '/api/public/rate-kavithai'
+      fullPath: '/api/public/rate-kavithai'
+      preLoaderRoute: typeof ApiPublicRateKavithaiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -201,6 +228,7 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   KIdRoute: KIdRoute,
   UUsernameRoute: UUsernameRoute,
+  ApiPublicRateKavithaiRoute: ApiPublicRateKavithaiRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
