@@ -1,0 +1,1 @@
+ALTER TABLE public.kavithais ADD COLUMN background_url text;
