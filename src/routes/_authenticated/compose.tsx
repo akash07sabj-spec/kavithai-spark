@@ -2,13 +2,22 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Sparkles, X } from "lucide-react";
+import { Image as ImageIcon, Sparkles, X } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { rateKavithai } from "@/lib/rate-kavithai.functions";
+import { BACKGROUNDS } from "@/lib/backgrounds";
 
 export const Route = createFileRoute("/_authenticated/compose")({
   component: Compose,
 });
+
+type Rating = {
+  spelling: number | null;
+  rhyming: number | null;
+  poetic: number | null;
+  words: number | null;
+  feedback: string;
+};
 
 function Compose() {
   const navigate = useNavigate();
@@ -16,8 +25,10 @@ function Compose() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [busy, setBusy] = useState(false);
-  const [rating, setRating] = useState<{ rating: number | null; feedback: string } | null>(null);
+  const [rating, setRating] = useState<Rating | null>(null);
   const [rating_busy, setRatingBusy] = useState(false);
+  const [bgUrl, setBgUrl] = useState<string | null>(null);
+  const [bgOpen, setBgOpen] = useState(false);
   const rate = useServerFn(rateKavithai);
 
   async function handleRate() {
@@ -54,7 +65,8 @@ function Compose() {
           author_id: user.id,
           title: title.trim() || null,
           content: content.trim(),
-        })
+          background_url: bgUrl,
+        } as any)
         .select("id")
         .single();
       if (error) throw error;
@@ -110,23 +122,39 @@ function Compose() {
             </button>
           </div>
           {rating && (
-            <div className="mt-3 flex items-start gap-3">
-              {rating.rating !== null && (
-                <div className="flex flex-col items-center rounded-xl bg-[color:var(--paper)] px-3 py-2 ring-1 ring-[color:var(--sepia)]/30">
-                  <span className="font-serif text-2xl leading-none text-[color:var(--sepia)]">
-                    {rating.rating}
-                  </span>
-                  <span className="text-[9px] uppercase tracking-widest text-neutral-500">/ 10</span>
-                </div>
+            <div className="mt-3">
+              <div className="grid grid-cols-4 gap-2">
+                {(
+                  [
+                    ["Spelling", rating.spelling],
+                    ["Rhyming", rating.rhyming],
+                    ["Poetic", rating.poetic],
+                    ["Words", rating.words],
+                  ] as const
+                ).map(([label, val]) => (
+                  <div
+                    key={label}
+                    className="flex flex-col items-center rounded-xl bg-[color:var(--paper)] px-2 py-2 ring-1 ring-[color:var(--sepia)]/30"
+                  >
+                    <span className="font-serif text-xl leading-none text-[color:var(--sepia)]">
+                      {val ?? "–"}
+                    </span>
+                    <span className="mt-1 text-[9px] uppercase tracking-widest text-neutral-500">
+                      {label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              {rating.feedback && (
+                <p className="mt-3 font-serif text-sm italic leading-relaxed text-neutral-700">
+                  {rating.feedback}
+                </p>
               )}
-              <p className="flex-1 font-serif text-sm italic leading-relaxed text-neutral-700">
-                {rating.feedback}
-              </p>
             </div>
           )}
           {!rating && !rating_busy && (
             <p className="mt-2 font-serif text-xs italic text-neutral-500">
-              Get a 1–10 score and short feedback before you post.
+              Get 4 scores — spelling, rhyming, poetic, words — before you post.
             </p>
           )}
         </div>
@@ -137,6 +165,24 @@ function Compose() {
         onSubmit={submit}
         className="flex flex-1 flex-col gap-6 px-6 py-8"
       >
+        {bgUrl && (
+          <div
+            className="relative h-32 overflow-hidden rounded-xl ring-1 ring-black/10"
+            style={{
+              backgroundImage: `url(${bgUrl})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setBgUrl(null)}
+              className="absolute right-2 top-2 rounded-full bg-black/60 px-2 py-1 text-[10px] uppercase tracking-widest text-white"
+            >
+              Remove
+            </button>
+          </div>
+        )}
         <input
           type="text"
           value={title}
@@ -158,6 +204,66 @@ function Compose() {
           {content.length} / 4000
         </p>
       </form>
+
+      <div className="fixed bottom-0 left-1/2 z-40 w-full max-w-[430px] -translate-x-1/2">
+        {bgOpen && (
+          <div className="border-t border-black/10 bg-[color:var(--paper)] px-4 pt-3">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="font-serif text-[11px] uppercase tracking-widest text-neutral-500">
+                Background
+              </span>
+              <button
+                type="button"
+                onClick={() => setBgUrl(null)}
+                className="text-[10px] uppercase tracking-widest text-neutral-500"
+              >
+                None
+              </button>
+            </div>
+            <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-3">
+              {BACKGROUNDS.map((b) => (
+                <button
+                  key={b.id}
+                  type="button"
+                  onClick={() => setBgUrl(b.url)}
+                  className={
+                    "h-20 w-20 shrink-0 snap-start overflow-hidden rounded-lg ring-2 transition-all " +
+                    (bgUrl === b.url
+                      ? "ring-[color:var(--sepia)]"
+                      : "ring-transparent hover:ring-black/10")
+                  }
+                >
+                  <img
+                    src={b.url + "&w=200"}
+                    alt={b.label}
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        <div className="flex items-center justify-between border-t border-black/10 bg-[color:var(--paper)]/95 px-4 pb-6 pt-3 backdrop-blur-md">
+          <button
+            type="button"
+            onClick={() => setBgOpen((v) => !v)}
+            className="flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-2 text-[11px] font-medium uppercase tracking-widest text-neutral-700"
+          >
+            <ImageIcon className="h-3.5 w-3.5" strokeWidth={1.8} />
+            Background {bgUrl ? "· selected" : ""}
+          </button>
+          {bgOpen && (
+            <button
+              type="button"
+              onClick={() => setBgOpen(false)}
+              className="text-[10px] uppercase tracking-widest text-neutral-500"
+            >
+              Done
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
