@@ -75,16 +75,44 @@ export function KavithaiCard({ k, currentUserId }: { k: FeedKavithai; currentUse
       <Link
         to="/k/$id"
         params={{ id: k.id }}
-        className="border-l-2 border-[color:var(--sepia)]/20 py-2 pl-6 transition-colors hover:border-[color:var(--sepia)]/50"
+        className={
+          k.background_url
+            ? "relative block overflow-hidden rounded-xl ring-1 ring-black/10"
+            : "border-l-2 border-[color:var(--sepia)]/20 py-2 pl-6 transition-colors hover:border-[color:var(--sepia)]/50"
+        }
+        style={
+          k.background_url
+            ? {
+                backgroundImage: `url(${k.background_url})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
+            : undefined
+        }
       >
-        {k.title && (
-          <h2 className="mb-2 font-serif text-base italic text-neutral-500">
-            {k.title}
-          </h2>
+        {k.background_url ? (
+          <div className="bg-black/45 p-6">
+            {k.title && (
+              <h2 className="mb-2 font-serif text-base italic text-white/80">
+                {k.title}
+              </h2>
+            )}
+            <p className="max-w-[56ch] whitespace-pre-line text-pretty font-tamil text-xl leading-relaxed text-white drop-shadow">
+              {k.content}
+            </p>
+          </div>
+        ) : (
+          <>
+            {k.title && (
+              <h2 className="mb-2 font-serif text-base italic text-neutral-500">
+                {k.title}
+              </h2>
+            )}
+            <p className="max-w-[56ch] whitespace-pre-line text-pretty font-tamil text-xl leading-relaxed text-[color:var(--ink)]">
+              {k.content}
+            </p>
+          </>
         )}
-        <p className="max-w-[56ch] whitespace-pre-line text-pretty font-tamil text-xl leading-relaxed text-[color:var(--ink)]">
-          {k.content}
-        </p>
       </Link>
 
       <div className="flex items-center gap-4 pt-1">

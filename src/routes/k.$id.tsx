@@ -133,9 +133,26 @@ function KavithaiDetail() {
                 {data.title}
               </h1>
             )}
-            <p className="whitespace-pre-line font-tamil text-2xl leading-relaxed text-[color:var(--ink)]">
-              {data.content}
-            </p>
+            {data.background_url ? (
+              <div
+                className="overflow-hidden rounded-2xl ring-1 ring-black/10"
+                style={{
+                  backgroundImage: `url(${data.background_url})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              >
+                <div className="bg-black/45 p-6">
+                  <p className="whitespace-pre-line font-tamil text-2xl leading-relaxed text-white drop-shadow">
+                    {data.content}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <p className="whitespace-pre-line font-tamil text-2xl leading-relaxed text-[color:var(--ink)]">
+                {data.content}
+              </p>
+            )}
 
             <div className="mt-8 flex items-center gap-4">
               <button
