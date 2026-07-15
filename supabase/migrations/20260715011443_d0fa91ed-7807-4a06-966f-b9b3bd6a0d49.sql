@@ -1,0 +1,1 @@
+ALTER TABLE public.kavithais ADD COLUMN IF NOT EXISTS text_color text;

@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Image as ImageIcon, Sparkles, X } from "lucide-react";
+import { Image as ImageIcon, Palette, Sparkles, X } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { rateKavithai } from "@/lib/rate-kavithai.functions";
 import { BACKGROUNDS } from "@/lib/backgrounds";
@@ -29,7 +29,20 @@ function Compose() {
   const [rating_busy, setRatingBusy] = useState(false);
   const [bgUrl, setBgUrl] = useState<string | null>(null);
   const [bgOpen, setBgOpen] = useState(false);
+  const [textColor, setTextColor] = useState<string>("#ffffff");
+  const [colorOpen, setColorOpen] = useState(false);
   const rate = useServerFn(rateKavithai);
+
+  const TEXT_COLORS = [
+    "#ffffff",
+    "#000000",
+    "#f5d76e",
+    "#e94560",
+    "#f39c12",
+    "#2ecc71",
+    "#3498db",
+    "#9b59b6",
+  ];
 
   async function handleRate() {
     if (!content.trim()) {
@@ -66,6 +79,7 @@ function Compose() {
           title: title.trim() || null,
           content: content.trim(),
           background_url: bgUrl,
+          text_color: bgUrl ? textColor : null,
         } as any)
         .select("id")
         .single();
@@ -165,24 +179,6 @@ function Compose() {
         onSubmit={submit}
         className="flex flex-1 flex-col gap-6 px-6 py-8"
       >
-        {bgUrl && (
-          <div
-            className="relative h-32 overflow-hidden rounded-xl ring-1 ring-black/10"
-            style={{
-              backgroundImage: `url(${bgUrl})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setBgUrl(null)}
-              className="absolute right-2 top-2 rounded-full bg-black/60 px-2 py-1 text-[10px] uppercase tracking-widest text-white"
-            >
-              Remove
-            </button>
-          </div>
-        )}
         <input
           type="text"
           value={title}
@@ -191,21 +187,76 @@ function Compose() {
           maxLength={120}
           className="border-b border-black/10 bg-transparent pb-2 font-serif text-lg italic text-neutral-600 outline-none placeholder:text-neutral-400"
         />
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="உன் மௌனம் கூட…&#10;&#10;Write your kavithai here."
-          rows={14}
-          maxLength={4000}
-          className="flex-1 resize-none whitespace-pre-line bg-transparent font-tamil text-xl leading-relaxed text-[color:var(--ink)] outline-none placeholder:text-neutral-400"
-          autoFocus
-        />
+        {bgUrl ? (
+          <div
+            className="relative flex-1 overflow-hidden rounded-xl ring-1 ring-black/10"
+            style={{
+              backgroundImage: `url(${bgUrl})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              minHeight: "380px",
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setBgUrl(null)}
+              className="absolute right-2 top-2 z-10 rounded-full bg-black/60 px-2 py-1 text-[10px] uppercase tracking-widest text-white"
+            >
+              Remove
+            </button>
+            <div className="absolute inset-0 bg-black/35" />
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="உன் மௌனம் கூட…"
+              rows={12}
+              maxLength={4000}
+              className="relative h-full w-full resize-none whitespace-pre-line bg-transparent p-6 font-tamil text-2xl leading-relaxed outline-none placeholder:text-white/50 [text-shadow:0_1px_6px_rgba(0,0,0,0.55)]"
+              style={{ color: textColor }}
+              autoFocus
+            />
+          </div>
+        ) : (
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="உன் மௌனம் கூட…&#10;&#10;Write your kavithai here."
+            rows={14}
+            maxLength={4000}
+            className="flex-1 resize-none whitespace-pre-line bg-transparent font-tamil text-xl leading-relaxed text-[color:var(--ink)] outline-none placeholder:text-neutral-400"
+            autoFocus
+          />
+        )}
         <p className="text-right text-[10px] uppercase tracking-widest text-neutral-400">
           {content.length} / 4000
         </p>
       </form>
 
       <div className="fixed bottom-0 left-1/2 z-40 w-full max-w-[430px] -translate-x-1/2">
+        {colorOpen && bgUrl && (
+          <div className="border-t border-black/10 bg-[color:var(--paper)] px-4 py-3">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="font-serif text-[11px] uppercase tracking-widest text-neutral-500">
+                Font color
+              </span>
+            </div>
+            <div className="flex gap-2">
+              {TEXT_COLORS.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setTextColor(c)}
+                  aria-label={`Text color ${c}`}
+                  className={
+                    "h-8 w-8 rounded-full ring-2 transition-all " +
+                    (textColor === c ? "ring-[color:var(--sepia)] scale-110" : "ring-black/10")
+                  }
+                  style={{ backgroundColor: c }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
         {bgOpen && (
           <div className="border-t border-black/10 bg-[color:var(--paper)] px-4 pt-3">
             <div className="mb-2 flex items-center justify-between">
@@ -245,14 +296,36 @@ function Compose() {
           </div>
         )}
         <div className="flex items-center justify-between border-t border-black/10 bg-[color:var(--paper)]/95 px-4 pb-6 pt-3 backdrop-blur-md">
-          <button
-            type="button"
-            onClick={() => setBgOpen((v) => !v)}
-            className="flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-2 text-[11px] font-medium uppercase tracking-widest text-neutral-700"
-          >
-            <ImageIcon className="h-3.5 w-3.5" strokeWidth={1.8} />
-            Background {bgUrl ? "· selected" : ""}
-          </button>
+          <div className="flex items-center gap-2">
+            {bgUrl && (
+              <button
+                type="button"
+                onClick={() => {
+                  setColorOpen((v) => !v);
+                  if (!colorOpen) setBgOpen(false);
+                }}
+                aria-label="Font color"
+                className="flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-2 text-[11px] font-medium uppercase tracking-widest text-neutral-700"
+              >
+                <Palette className="h-3.5 w-3.5" strokeWidth={1.8} />
+                <span
+                  className="h-3 w-3 rounded-full ring-1 ring-black/20"
+                  style={{ backgroundColor: textColor }}
+                />
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                setBgOpen((v) => !v);
+                if (!bgOpen) setColorOpen(false);
+              }}
+              className="flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-2 text-[11px] font-medium uppercase tracking-widest text-neutral-700"
+            >
+              <ImageIcon className="h-3.5 w-3.5" strokeWidth={1.8} />
+              Background {bgUrl ? "· selected" : ""}
+            </button>
+          </div>
           {bgOpen && (
             <button
               type="button"

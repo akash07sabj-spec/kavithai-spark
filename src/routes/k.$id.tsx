@@ -143,7 +143,10 @@ function KavithaiDetail() {
                 }}
               >
                 <div className="bg-black/45 p-6">
-                  <p className="whitespace-pre-line font-tamil text-2xl leading-relaxed text-white drop-shadow">
+                  <p
+                    className="whitespace-pre-line font-tamil text-2xl leading-relaxed drop-shadow [text-shadow:0_1px_6px_rgba(0,0,0,0.55)]"
+                    style={{ color: data.text_color ?? "#ffffff" }}
+                  >
                     {data.content}
                   </p>
                 </div>
