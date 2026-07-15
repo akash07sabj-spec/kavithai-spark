@@ -97,7 +97,10 @@ export function KavithaiCard({ k, currentUserId }: { k: FeedKavithai; currentUse
                 {k.title}
               </h2>
             )}
-            <p className="max-w-[56ch] whitespace-pre-line text-pretty font-tamil text-xl leading-relaxed text-white drop-shadow">
+            <p
+              className="max-w-[56ch] whitespace-pre-line text-pretty font-tamil text-xl leading-relaxed drop-shadow [text-shadow:0_1px_6px_rgba(0,0,0,0.55)]"
+              style={{ color: k.text_color ?? "#ffffff" }}
+            >
               {k.content}
             </p>
           </div>
