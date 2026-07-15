@@ -29,7 +29,20 @@ function Compose() {
   const [rating_busy, setRatingBusy] = useState(false);
   const [bgUrl, setBgUrl] = useState<string | null>(null);
   const [bgOpen, setBgOpen] = useState(false);
+  const [textColor, setTextColor] = useState<string>("#ffffff");
+  const [colorOpen, setColorOpen] = useState(false);
   const rate = useServerFn(rateKavithai);
+
+  const TEXT_COLORS = [
+    "#ffffff",
+    "#000000",
+    "#f5d76e",
+    "#e94560",
+    "#f39c12",
+    "#2ecc71",
+    "#3498db",
+    "#9b59b6",
+  ];
 
   async function handleRate() {
     if (!content.trim()) {
@@ -66,6 +79,7 @@ function Compose() {
           title: title.trim() || null,
           content: content.trim(),
           background_url: bgUrl,
+          text_color: bgUrl ? textColor : null,
         } as any)
         .select("id")
         .single();
