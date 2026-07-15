@@ -7,6 +7,7 @@ export type FeedKavithai = {
   created_at: string;
   author_id: string;
   background_url: string | null;
+  text_color: string | null;
   author: {
     id: string;
     username: string;
@@ -22,7 +23,7 @@ export async function fetchFeed(currentUserId: string | null): Promise<FeedKavit
   const { data, error } = await supabase
     .from("kavithais")
     .select(
-      `id, title, content, created_at, author_id, background_url,
+      `id, title, content, created_at, author_id, background_url, text_color,
        author:profiles!kavithais_author_id_fkey(id, username, display_name, avatar_url),
        likes_count:likes(count),
        comments_count:comments(count)`,
@@ -48,6 +49,7 @@ export async function fetchFeed(currentUserId: string | null): Promise<FeedKavit
     created_at: k.created_at,
     author_id: k.author_id,
     background_url: k.background_url ?? null,
+    text_color: k.text_color ?? null,
     author: Array.isArray(k.author) ? k.author[0] : k.author,
     likes_count: k.likes_count?.[0]?.count ?? 0,
     comments_count: k.comments_count?.[0]?.count ?? 0,
@@ -59,7 +61,7 @@ export async function fetchKavithai(id: string, currentUserId: string | null) {
   const { data, error } = await supabase
     .from("kavithais")
     .select(
-      `id, title, content, created_at, author_id, background_url,
+      `id, title, content, created_at, author_id, background_url, text_color,
        author:profiles!kavithais_author_id_fkey(id, username, display_name, avatar_url),
        likes(user_id),
        comments(id, content, created_at, author_id, author:profiles!comments_author_id_fkey(username, display_name))`,
@@ -76,6 +78,7 @@ export async function fetchKavithai(id: string, currentUserId: string | null) {
     created_at: anyData.created_at as string,
     author_id: anyData.author_id as string,
     background_url: (anyData.background_url ?? null) as string | null,
+    text_color: (anyData.text_color ?? null) as string | null,
     author: Array.isArray(anyData.author) ? anyData.author[0] : anyData.author,
     likes_count: anyData.likes?.length ?? 0,
     liked_by_me: !!currentUserId && (anyData.likes ?? []).some((l: any) => l.user_id === currentUserId),
