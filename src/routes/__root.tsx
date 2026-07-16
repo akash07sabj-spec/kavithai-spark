@@ -89,17 +89,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         property: "og:description",
         content:
-          "A warm, literary space to write, share, and support Tamil poetry.",
+          "Kavithai is a warm, literary space to write, share, and support Tamil poetry. Post a kavithai, read others, and give your support.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "கவிதை — Share Tamil poetry" },
+      { name: "twitter:description", content: "Kavithai is a warm, literary space to write, share, and support Tamil poetry. Post a kavithai, read others, and give your support." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f5f7bc86-31c3-422b-abc6-f056324fff91/id-preview-9c727f6b--54331572-1794-4665-89a0-c8e6d97a3509.lovable.app-1784199437889.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f5f7bc86-31c3-422b-abc6-f056324fff91/id-preview-9c727f6b--54331572-1794-4665-89a0-c8e6d97a3509.lovable.app-1784199437889.png" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
         rel: "preconnect",
