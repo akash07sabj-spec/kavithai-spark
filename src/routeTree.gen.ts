@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as QrRouteImport } from './routes/qr'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -22,6 +23,11 @@ import { Route as ApiPublicRateKavithaiRouteImport } from './routes/api/public/r
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QrRoute = QrRouteImport.update({
+  id: '/qr',
+  path: '/qr',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MeRoute = MeRouteImport.update({
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/me': typeof MeRoute
+  '/qr': typeof QrRoute
   '/search': typeof SearchRoute
   '/compose': typeof AuthenticatedComposeRoute
   '/k/$id': typeof KIdRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/me': typeof MeRoute
+  '/qr': typeof QrRoute
   '/search': typeof SearchRoute
   '/compose': typeof AuthenticatedComposeRoute
   '/k/$id': typeof KIdRoute
@@ -90,6 +98,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/me': typeof MeRoute
+  '/qr': typeof QrRoute
   '/search': typeof SearchRoute
   '/_authenticated/compose': typeof AuthenticatedComposeRoute
   '/k/$id': typeof KIdRoute
@@ -102,6 +111,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/me'
+    | '/qr'
     | '/search'
     | '/compose'
     | '/k/$id'
@@ -112,6 +122,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/me'
+    | '/qr'
     | '/search'
     | '/compose'
     | '/k/$id'
@@ -123,6 +134,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/me'
+    | '/qr'
     | '/search'
     | '/_authenticated/compose'
     | '/k/$id'
@@ -135,6 +147,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   MeRoute: typeof MeRoute
+  QrRoute: typeof QrRoute
   SearchRoute: typeof SearchRoute
   KIdRoute: typeof KIdRoute
   UUsernameRoute: typeof UUsernameRoute
@@ -148,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/qr': {
+      id: '/qr'
+      path: '/qr'
+      fullPath: '/qr'
+      preLoaderRoute: typeof QrRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/me': {
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   MeRoute: MeRoute,
+  QrRoute: QrRoute,
   SearchRoute: SearchRoute,
   KIdRoute: KIdRoute,
   UUsernameRoute: UUsernameRoute,
