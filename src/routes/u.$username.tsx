@@ -264,6 +264,40 @@ function EditProfile({
   const [bio, setBio] = useState(initial.bio);
   const [avatarUrl, setAvatarUrl] = useState(initial.avatar_url);
   const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  async function onPickFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please pick an image");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be under 5MB");
+      return;
+    }
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+      const path = `${userId}/${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true, contentType: file.type });
+      if (upErr) throw upErr;
+      const { data: signed, error: sErr } = await supabase.storage
+        .from("avatars")
+        .createSignedUrl(path, 60 * 60 * 24 * 365);
+      if (sErr) throw sErr;
+      setAvatarUrl(signed.signedUrl);
+      toast.success("Photo uploaded — tap Save");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   async function save() {
     setBusy(true);
@@ -303,7 +337,7 @@ function EditProfile({
 
         <label className="block">
           <span className="text-[10px] uppercase tracking-widest text-neutral-500">
-            Avatar URL
+            Profile photo
           </span>
           <div className="mt-2 flex items-center gap-3">
             {avatarUrl ? (
@@ -315,13 +349,16 @@ function EditProfile({
             ) : (
               <div className="size-14 rounded-full bg-neutral-200" />
             )}
-            <input
-              type="url"
-              value={avatarUrl}
-              onChange={(e) => setAvatarUrl(e.target.value)}
-              placeholder="https://…/photo.jpg"
-              className="flex-1 rounded-lg border border-black/10 bg-white px-3 py-2 text-sm outline-none focus:border-[color:var(--sepia)]"
-            />
+            <label className="flex-1 cursor-pointer rounded-lg border border-dashed border-black/15 bg-white px-3 py-2 text-center text-xs uppercase tracking-widest text-neutral-500 hover:border-[color:var(--sepia)] hover:text-[color:var(--sepia)]">
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={onPickFile}
+                disabled={uploading}
+              />
+              {uploading ? "Uploading…" : avatarUrl ? "Change photo" : "Upload photo"}
+            </label>
           </div>
         </label>
 
