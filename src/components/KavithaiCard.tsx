@@ -1,6 +1,7 @@
 import { Link, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
-import { MessageCircle, Share2 } from "lucide-react";
+import { MessageCircle, Share2, Trash2 } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { FeedKavithai } from "@/lib/kavithai";
@@ -8,9 +9,28 @@ import { timeAgo } from "@/lib/kavithai";
 
 export function KavithaiCard({ k, currentUserId }: { k: FeedKavithai; currentUserId: string | null }) {
   const router = useRouter();
+  const qc = useQueryClient();
   const [liked, setLiked] = useState(k.liked_by_me);
   const [count, setCount] = useState(k.likes_count);
   const [busy, setBusy] = useState(false);
+  const [deleted, setDeleted] = useState(false);
+  const isOwner = currentUserId && currentUserId === k.author_id;
+
+  async function handleDelete() {
+    if (!isOwner) return;
+    if (!window.confirm("Delete this kavithai? This can't be undone.")) return;
+    setDeleted(true);
+    const { error } = await supabase.from("kavithais").delete().eq("id", k.id);
+    if (error) {
+      setDeleted(false);
+      toast.error("Couldn't delete");
+      return;
+    }
+    toast.success("Kavithai deleted");
+    qc.invalidateQueries({ queryKey: ["feed"] });
+  }
+
+  if (deleted) return null;
 
   const initials = (k.author?.display_name ?? "?").slice(0, 1).toUpperCase();
 
@@ -151,9 +171,19 @@ export function KavithaiCard({ k, currentUserId }: { k: FeedKavithai; currentUse
           <MessageCircle className="h-3.5 w-3.5" strokeWidth={1.8} />
           {k.comments_count} comments
         </Link>
+        {isOwner && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            aria-label="Delete kavithai"
+            className="ml-auto text-neutral-400 hover:text-red-600"
+          >
+            <Trash2 className="h-4 w-4" strokeWidth={1.6} />
+          </button>
+        )}
         <button
           type="button"
-          className="ml-auto text-neutral-400 hover:text-[color:var(--ink)]"
+          className={(isOwner ? "" : "ml-auto ") + "text-neutral-400 hover:text-[color:var(--ink)]"}
           aria-label="Share"
           onClick={async () => {
             const url = `${window.location.origin}/k/${k.id}`;

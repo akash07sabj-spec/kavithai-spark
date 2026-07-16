@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchKavithai, timeAgo } from "@/lib/kavithai";
 import { useSession } from "@/hooks/use-session";
@@ -82,6 +82,19 @@ function KavithaiDetail() {
     }
   }
 
+  async function handleDelete() {
+    if (!data || data.author_id !== userId) return;
+    if (!window.confirm("Delete this kavithai? This can't be undone.")) return;
+    const { error } = await supabase.from("kavithais").delete().eq("id", id);
+    if (error) {
+      toast.error("Couldn't delete");
+      return;
+    }
+    toast.success("Kavithai deleted");
+    qc.invalidateQueries({ queryKey: ["feed"] });
+    navigate({ to: "/" });
+  }
+
   return (
     <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-[color:var(--paper)]">
       <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-black/5 bg-[color:var(--paper)]/90 px-5 backdrop-blur-md">
@@ -96,6 +109,16 @@ function KavithaiDetail() {
         <span className="font-serif text-sm font-medium uppercase tracking-widest text-neutral-500">
           Kavithai
         </span>
+        {data && userId === data.author_id && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            aria-label="Delete kavithai"
+            className="ml-auto flex size-9 items-center justify-center rounded-full ring-1 ring-black/10 text-neutral-500 hover:bg-red-50 hover:text-red-600"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        )}
       </header>
 
       {isLoading && <p className="p-6 text-sm text-neutral-500">Loading…</p>}
