@@ -68,11 +68,12 @@
 
 :root {
   --radius: 0.625rem;
-  --paper: #f9f6f1;
-  --ink: #32302e;
-  --sepia: #c2410c;
-  --background: #f9f6f1;
-  --foreground: #32302e;
+  /* Olaichuvadi — palm-leaf manuscript */
+  --paper: #d9b98a;
+  --ink: #3b2412;
+  --sepia: #8b3a1f;
+  --background: #d9b98a;
+  --foreground: #3b2412;
   --card: oklch(1 0 0);
   --card-foreground: #32302e;
   --popover: oklch(1 0 0);
@@ -148,5 +149,25 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    background-image:
+      /* subtle vignette to hint at leaf edges */
+      radial-gradient(ellipse at 50% 0%, rgba(255, 240, 210, 0.35) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 100%, rgba(80, 45, 20, 0.25) 0%, transparent 60%),
+      /* horizontal palm-leaf fibers */
+      repeating-linear-gradient(
+        0deg,
+        rgba(90, 55, 25, 0.10) 0px,
+        rgba(90, 55, 25, 0.10) 1px,
+        transparent 1px,
+        transparent 4px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        rgba(255, 235, 200, 0.08) 0px,
+        rgba(255, 235, 200, 0.08) 1px,
+        transparent 1px,
+        transparent 9px
+      );
+    background-attachment: fixed;
   }
 }
