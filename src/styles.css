@@ -68,17 +68,19 @@
 
 :root {
   --radius: 0.625rem;
-  /* Olaichuvadi — palm-leaf manuscript */
-  --paper: #d9b98a;
-  --ink: #3b2412;
-  --sepia: #8b3a1f;
-  --background: #d9b98a;
-  --foreground: #3b2412;
+  /* Olaichuvadi — dried palm-leaf manuscript */
+  --paper: #c9a66b;
+  --paper-light: #dcc190;
+  --paper-dark: #b08d55;
+  --ink: #2a1608;
+  --sepia: #7a2e12;
+  --background: #c9a66b;
+  --foreground: #2a1608;
   --card: oklch(1 0 0);
   --card-foreground: #32302e;
   --popover: oklch(1 0 0);
   --popover-foreground: #32302e;
-  --primary: #c2410c;
+  --primary: #9c2f0d;
   --primary-foreground: #f9f6f1;
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: #32302e;
@@ -90,7 +92,7 @@
   --destructive-foreground: oklch(0.984 0.003 247.858);
   --border: oklch(0.929 0.013 255.508);
   --input: oklch(0.929 0.013 255.508);
-  --ring: #c2410c;
+  --ring: #9c2f0d;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -150,24 +152,58 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     background-image:
-      /* subtle vignette to hint at leaf edges */
-      radial-gradient(ellipse at 50% 0%, rgba(255, 240, 210, 0.35) 0%, transparent 55%),
-      radial-gradient(ellipse at 50% 100%, rgba(80, 45, 20, 0.25) 0%, transparent 60%),
-      /* horizontal palm-leaf fibers */
+      /* central binding thread shadow */
+      radial-gradient(ellipse at 50% 0%, rgba(42, 22, 8, 0.18) 0%, transparent 45%),
+      radial-gradient(ellipse at 50% 100%, rgba(42, 22, 8, 0.22) 0%, transparent 55%),
+      /* warm leaf sheen */
+      radial-gradient(ellipse at 30% 20%, rgba(255, 245, 210, 0.25) 0%, transparent 40%),
+      radial-gradient(ellipse at 70% 80%, rgba(255, 235, 180, 0.18) 0%, transparent 45%),
+      /* fine palm-leaf fibers */
       repeating-linear-gradient(
         0deg,
-        rgba(90, 55, 25, 0.10) 0px,
-        rgba(90, 55, 25, 0.10) 1px,
+        rgba(80, 45, 18, 0.14) 0px,
+        rgba(80, 45, 18, 0.14) 1px,
         transparent 1px,
-        transparent 4px
+        transparent 3px
       ),
       repeating-linear-gradient(
         0deg,
-        rgba(255, 235, 200, 0.08) 0px,
-        rgba(255, 235, 200, 0.08) 1px,
+        rgba(60, 35, 14, 0.08) 0px,
+        rgba(60, 35, 14, 0.08) 1px,
         transparent 1px,
-        transparent 9px
+        transparent 7px
+      ),
+      /* thicker leaf veins */
+      repeating-linear-gradient(
+        0deg,
+        rgba(90, 55, 25, 0.12) 0px,
+        rgba(90, 55, 25, 0.12) 2px,
+        transparent 2px,
+        transparent 22px
+      ),
+      /* dried palm leaf base gradient */
+      linear-gradient(
+        180deg,
+        #d4b378 0%,
+        #c9a66b 25%,
+        #c19b60 50%,
+        #c9a66b 75%,
+        #d4b378 100%
       );
     background-attachment: fixed;
+  }
+}
+
+@layer utilities {
+  .olaichuvadi-card {
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        rgba(80, 45, 18, 0.06) 0px,
+        rgba(80, 45, 18, 0.06) 1px,
+        transparent 1px,
+        transparent 8px
+      );
+    background-color: rgba(255, 250, 235, 0.35);
   }
 }

@@ -125,16 +125,16 @@ export function KavithaiCard({ k, currentUserId }: { k: FeedKavithai; currentUse
             </p>
           </div>
         ) : (
-          <>
+          <div className="olaichuvadi-card rounded-xl border border-[color:var(--ink)]/10 p-5 shadow-sm">
             {k.title && (
-              <h2 className="mb-2 font-serif text-base italic text-neutral-500">
+              <h2 className="mb-2 font-serif text-base italic text-[color:var(--ink)]/60">
                 {k.title}
               </h2>
             )}
             <p className="max-w-[56ch] whitespace-pre-line text-pretty font-tamil text-xl leading-relaxed text-[color:var(--ink)]">
               {k.content}
             </p>
-          </>
+          </div>
         )}
       </Link>
 

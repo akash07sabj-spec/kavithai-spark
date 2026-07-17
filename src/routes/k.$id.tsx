@@ -175,9 +175,11 @@ function KavithaiDetail() {
                 </div>
               </div>
             ) : (
-              <p className="whitespace-pre-line font-tamil text-2xl leading-relaxed text-[color:var(--ink)]">
-                {data.content}
-              </p>
+              <div className="olaichuvadi-card rounded-2xl border border-[color:var(--ink)]/10 p-6 shadow-sm">
+                <p className="whitespace-pre-line font-tamil text-2xl leading-relaxed text-[color:var(--ink)]">
+                  {data.content}
+                </p>
+              </div>
             )}
 
             <div className="mt-8 flex items-center gap-4">
