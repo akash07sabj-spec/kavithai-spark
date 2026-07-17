@@ -1,0 +1,11 @@
+{
+  "appId": "app.lovable.kavithai",
+  "appName": "Kavithai",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}
