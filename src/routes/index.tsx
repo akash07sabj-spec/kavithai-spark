@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppHeader } from "@/components/AppHeader";
-import { BottomNav } from "@/components/BottomNav";
+import { AppShell } from "@/components/AppShell";
 import { KavithaiCard } from "@/components/KavithaiCard";
 import { fetchFeed } from "@/lib/kavithai";
 import { useSession } from "@/hooks/use-session";
@@ -22,9 +22,14 @@ function Home() {
   });
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-[color:var(--paper)]">
-      <AppHeader />
-      <main className="flex-1 pb-28 pt-6">
+    <AppShell
+      mobileHeader={<AppHeader />}
+      maxWidth="max-w-[680px] xl:max-w-none"
+    >
+      <main className="flex-1 pb-28 pt-6 lg:pb-16 lg:pt-10">
+        <h1 className="mb-8 hidden px-6 font-serif text-3xl tracking-tight text-[color:var(--ink)] lg:block">
+          Latest kavithai
+        </h1>
         {isLoading && (
           <p className="px-6 text-sm text-neutral-500">Loading kavithai…</p>
         )}
@@ -50,14 +55,13 @@ function Home() {
           </div>
         )}
         {data && data.length > 0 && (
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-10 xl:grid xl:grid-cols-2 xl:items-start xl:gap-x-4 xl:gap-y-12">
             {data.map((k) => (
               <KavithaiCard key={k.id} k={k} currentUserId={userId} />
             ))}
           </div>
         )}
       </main>
-      <BottomNav />
-    </div>
+    </AppShell>
   );
 }
