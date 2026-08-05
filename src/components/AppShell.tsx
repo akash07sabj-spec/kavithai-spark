@@ -6,12 +6,15 @@ export function AppShell({
   children,
   mobileHeader,
   maxWidth = "max-w-[680px]",
+  hideBottomNav = false,
 }: {
   children: ReactNode;
   /** Header shown on phones/tablets only (desktop uses the sidebar). */
   mobileHeader?: ReactNode;
   /** Content column width on desktop. */
   maxWidth?: string;
+  /** Pages with their own fixed bottom bar (compose, detail) hide the tab bar. */
+  hideBottomNav?: boolean;
 }) {
   return (
     <div className="min-h-screen bg-[color:var(--paper)]">
@@ -28,9 +31,11 @@ export function AppShell({
           </div>
         </div>
       </div>
-      <div className="lg:hidden">
-        <BottomNav />
-      </div>
+      {hideBottomNav ? null : (
+        <div className="lg:hidden">
+          <BottomNav />
+        </div>
+      )}
     </div>
   );
 }
