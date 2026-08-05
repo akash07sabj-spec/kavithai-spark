@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Search as SearchIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { BottomNav } from "@/components/BottomNav";
+import { AppShell } from "@/components/AppShell";
 
 export const Route = createFileRoute("/search")({
   component: SearchPage,
@@ -33,17 +33,17 @@ function SearchPage() {
   });
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-[color:var(--paper)]">
-      <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-black/5 bg-[color:var(--paper)]/90 px-5 backdrop-blur-md">
+    <AppShell>
+      <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-black/5 bg-[color:var(--paper)]/90 px-5 backdrop-blur-md lg:static lg:h-auto lg:border-0 lg:px-6 lg:pb-4 lg:pt-10 lg:backdrop-blur-none">
         <button
           type="button"
           onClick={() => navigate({ to: "/" })}
           aria-label="Back"
-          className="flex size-9 items-center justify-center rounded-full ring-1 ring-black/10"
+          className="flex size-9 items-center justify-center rounded-full ring-1 ring-black/10 lg:hidden"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>
-        <span className="font-serif text-sm font-medium uppercase tracking-widest text-neutral-500">
+        <span className="font-serif text-sm font-medium uppercase tracking-widest text-neutral-500 lg:text-3xl lg:normal-case lg:tracking-tight lg:text-[color:var(--ink)]">
           Find poets
         </span>
       </header>
@@ -106,8 +106,6 @@ function SearchPage() {
           )}
         </div>
       </main>
-
-      <BottomNav />
-    </div>
+    </AppShell>
   );
 }
