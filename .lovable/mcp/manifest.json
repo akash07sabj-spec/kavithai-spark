@@ -1,0 +1,229 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://msbngoyiiddwiqfdvpfm.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "kavithai-corner",
+      "version": "0.1.0",
+      "title": "Kavithai Corner"
+    },
+    "tools": [
+      {
+        "name": "list_feed",
+        "title": "List kavithai feed",
+        "description": "List the most recent kavithais (Tamil poems) posted to the app, newest first.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "description": "How many poems to return (default 10).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_kavithai",
+        "title": "Get a kavithai",
+        "description": "Fetch one kavithai by id, including its author, support count and comments.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The kavithai id."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "post_kavithai",
+        "title": "Post a kavithai",
+        "description": "Publish a new kavithai (Tamil poem) as the signed-in poet.",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "content": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The poem text. Line breaks are preserved."
+            },
+            "title": {
+              "description": "Optional title.",
+              "type": "string"
+            },
+            "background_url": {
+              "description": "Optional background image URL for the poem card.",
+              "type": "string",
+              "format": "uri"
+            },
+            "text_color": {
+              "description": "Optional CSS color for the poem text over a background image.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "content"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "delete_kavithai",
+        "title": "Delete a kavithai",
+        "description": "Permanently delete one of the signed-in poet's own kavithais.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The kavithai id to delete."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "support_kavithai",
+        "title": "Support or unsupport a kavithai",
+        "description": "Add or remove the signed-in poet's support (like) on a kavithai.",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The kavithai id."
+            },
+            "support": {
+              "description": "true to support (default), false to remove support.",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "add_comment",
+        "title": "Comment on a kavithai",
+        "description": "Post a comment on a kavithai as the signed-in poet.",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "kavithai_id": {
+              "type": "string",
+              "description": "The kavithai id to comment on."
+            },
+            "content": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The comment text."
+            }
+          },
+          "required": [
+            "kavithai_id",
+            "content"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_poets",
+        "title": "Search poets",
+        "description": "Find poets on the app by username or display name.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Search text matched against username and display name."
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "my_kavithais",
+        "title": "List my kavithais",
+        "description": "List the kavithais written by the signed-in poet, newest first.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "description": "How many to return (default 20).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
