@@ -3,7 +3,7 @@ import { useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
-import { BottomNav } from "@/components/BottomNav";
+import { AppShell } from "@/components/AppShell";
 
 export const Route = createFileRoute("/qr")({
   component: QrPage,
@@ -22,8 +22,8 @@ function QrPage() {
   const target = expoUrl.trim() || webUrl;
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-[color:var(--paper)]">
-      <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-black/5 bg-[color:var(--paper)]/90 px-5 backdrop-blur-md">
+    <AppShell>
+      <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-black/5 bg-[color:var(--paper)]/90 px-5 backdrop-blur-md lg:static lg:border-0 lg:px-6 lg:pt-8 lg:backdrop-blur-none">
         <button
           type="button"
           onClick={() => navigate({ to: "/" })}
@@ -73,8 +73,6 @@ function QrPage() {
           />
         </label>
       </main>
-
-      <BottomNav />
-    </div>
+    </AppShell>
   );
 }

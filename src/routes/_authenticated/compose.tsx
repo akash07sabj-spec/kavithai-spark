@@ -6,6 +6,7 @@ import { Image as ImageIcon, Palette, Sparkles, X } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { rateKavithai } from "@/lib/rate-kavithai.functions";
 import { BACKGROUNDS } from "@/lib/backgrounds";
+import { AppShell } from "@/components/AppShell";
 
 export const Route = createFileRoute("/_authenticated/compose")({
   component: Compose,
@@ -94,8 +95,8 @@ function Compose() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-[color:var(--paper)]">
-      <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-black/5 bg-[color:var(--paper)]/90 px-5 backdrop-blur-md">
+    <AppShell hideBottomNav>
+      <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-black/5 bg-[color:var(--paper)]/90 px-5 backdrop-blur-md lg:static lg:mt-6 lg:rounded-full lg:border lg:border-black/5">
         <button
           type="button"
           onClick={() => navigate({ to: "/" })}
@@ -232,7 +233,7 @@ function Compose() {
         </p>
       </form>
 
-      <div className="fixed bottom-0 left-1/2 z-40 w-full max-w-[430px] -translate-x-1/2">
+      <div className="fixed bottom-0 left-1/2 z-40 w-full max-w-[430px] -translate-x-1/2 lg:static lg:left-auto lg:mb-10 lg:max-w-none lg:translate-x-0 lg:overflow-hidden lg:rounded-2xl lg:border lg:border-black/10">
         {colorOpen && bgUrl && (
           <div className="border-t border-black/10 bg-[color:var(--paper)] px-4 py-3">
             <div className="mb-2 flex items-center justify-between">
@@ -337,6 +338,6 @@ function Compose() {
           )}
         </div>
       </div>
-    </div>
+    </AppShell>
   );
 }

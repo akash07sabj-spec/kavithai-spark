@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ArrowLeft, Pencil } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { timeAgo } from "@/lib/kavithai";
-import { BottomNav } from "@/components/BottomNav";
+import { AppShell } from "@/components/AppShell";
 import { useSession } from "@/hooks/use-session";
 import { toast } from "sonner";
 
@@ -66,13 +66,13 @@ function ProfilePage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-[color:var(--paper)]">
-      <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-black/5 bg-[color:var(--paper)]/90 px-5 backdrop-blur-md">
+    <AppShell>
+      <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-black/5 bg-[color:var(--paper)]/90 px-5 backdrop-blur-md lg:static lg:border-0 lg:px-6 lg:pt-8 lg:backdrop-blur-none">
         <button
           type="button"
           onClick={() => navigate({ to: "/" })}
           aria-label="Back"
-          className="flex size-9 items-center justify-center rounded-full ring-1 ring-black/10"
+          className="flex size-9 items-center justify-center rounded-full ring-1 ring-black/10 lg:hidden"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>
@@ -187,9 +187,7 @@ function ProfilePage() {
           userId={data.profile.id}
         />
       )}
-
-      <BottomNav />
-    </div>
+    </AppShell>
   );
 }
 
