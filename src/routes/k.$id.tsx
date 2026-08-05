@@ -96,8 +96,8 @@ function KavithaiDetail() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-[430px] flex-col bg-[color:var(--paper)]">
-      <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-black/5 bg-[color:var(--paper)]/90 px-5 backdrop-blur-md">
+    <AppShell hideBottomNav>
+      <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-black/5 bg-[color:var(--paper)]/90 px-5 backdrop-blur-md lg:static lg:border-0 lg:px-6 lg:pt-8 lg:backdrop-blur-none">
         <button
           type="button"
           onClick={() => navigate({ to: "/" })}
@@ -243,7 +243,7 @@ function KavithaiDetail() {
 
       <form
         onSubmit={submitComment}
-        className="fixed bottom-0 left-1/2 z-30 w-full max-w-[430px] -translate-x-1/2 border-t border-black/5 bg-[color:var(--paper)]/95 px-4 pb-6 pt-3 backdrop-blur-md"
+        className="fixed bottom-0 left-1/2 z-30 w-full max-w-[430px] -translate-x-1/2 border-t border-black/5 bg-[color:var(--paper)]/95 px-4 pb-6 pt-3 backdrop-blur-md lg:static lg:left-auto lg:max-w-none lg:translate-x-0 lg:px-6 lg:pb-12"
       >
         <div className="flex items-center gap-2">
           <input
@@ -262,6 +262,6 @@ function KavithaiDetail() {
           </button>
         </div>
       </form>
-    </div>
+    </AppShell>
   );
 }
