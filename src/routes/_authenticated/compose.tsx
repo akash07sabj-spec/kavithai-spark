@@ -6,6 +6,7 @@ import { Image as ImageIcon, Palette, Sparkles, X } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { rateKavithai } from "@/lib/rate-kavithai.functions";
 import { BACKGROUNDS } from "@/lib/backgrounds";
+import { AppShell } from "@/components/AppShell";
 
 export const Route = createFileRoute("/_authenticated/compose")({
   component: Compose,
