@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowLeft, Trash2 } from "lucide-react";
+import { AppShell } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchKavithai, timeAgo } from "@/lib/kavithai";
 import { useSession } from "@/hooks/use-session";
